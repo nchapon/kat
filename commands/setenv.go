@@ -1,19 +1,37 @@
 package commands
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 )
 
-type Env struct {
-	name string
-	dir  string
+var ConfigFile string
+
+// init ...
+func init() {
+
+	katDir := katDir()
+	ConfigFile = filepath.Join(katDir, "kong.conf")
+
+	err := os.MkdirAll(katDir, os.ModePerm)
+
+	check(err)
+
+	if _, err := os.Stat(ConfigFile); os.IsNotExist(err) {
+		os.Create(ConfigFile)
+	}
+
 }
 
-// NewGame ...
-func NewEnv(n string) Env {
-	return Env{name: n, dir: "/tmp"}
+// katDir ...
+func katDir() string {
+	exPath, err := os.Executable()
+	check(err)
+
+	return filepath.Dir(exPath)
 }
 
 func check(e error) {
@@ -22,21 +40,21 @@ func check(e error) {
 	}
 }
 
+type Config struct {
+	KongUrl      string
+	KongAdminUrl string
+}
+
 // setenv ...
-func SetEnv(name string) {
-	fmt.Println("Set env", name)
+func Init() {
+	fmt.Println("Init Kat Project")
 
-	ex, err := os.Executable()
-	check(err)
+	config := Config{KongUrl: "https://localhost:8443",
+		KongAdminUrl: "http://localhost:8001"}
 
-	exPath := filepath.Dir(ex)
+	json, _ := json.MarshalIndent(config, "", "  ")
 
-	f, err := os.Create(fmt.Sprintf("%s/.kat", exPath))
-	check(err)
-	defer f.Close()
+	ioutil.WriteFile(ConfigFile, json, os.ModePerm)
 
-	f.WriteString(fmt.Sprintln(name))
-	f.Sync()
-
-	fmt.Printf("Created .kat file in %s.\n", exPath)
+	fmt.Printf("Your Kong is now %s \n", ConfigFile)
 }

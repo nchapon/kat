@@ -4,23 +4,15 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"path/filepath"
 	"testing"
 )
 
-func TestSetEnv(t *testing.T) {
-	t.Logf("Testing .kat file is created in /tmp")
+func TestInit(t *testing.T) {
+	t.Log("Testing config file is created.")
 
-	//env := NewEnv("Test")
+	Init()
 
-	SetEnv("test")
-
-	ex, err := os.Executable()
-	check(err)
-
-	exPath := filepath.Dir(ex)
-
-	configFile := fmt.Sprintf("%s/.kat", exPath)
+	configFile := fmt.Sprintf("%s/kong.conf", katDir())
 
 	f, err := os.Open(configFile)
 
@@ -28,15 +20,11 @@ func TestSetEnv(t *testing.T) {
 		t.Errorf("Could not read file  %s", configFile)
 	}
 
+	// TODO : change tesy
 	s := bufio.NewScanner(f)
 	s.Scan()
 	if data := s.Text(); data != "test" {
 		t.Errorf("Expected content=test, but it was %s.", data)
 	}
-	//env.inc(5)
-
-	//if current := env.current; current != 5 {
-	//t.Errorf("Expected current=5, but it was %d.", current)
-	//}
 
 }

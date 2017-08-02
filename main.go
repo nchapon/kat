@@ -39,8 +39,7 @@ func main() {
 			Aliases: []string{"s"},
 			Usage:   "Set up kong env",
 			Action: func(c *cli.Context) error {
-				fmt.Println("Setup env", c.Args().First())
-				commands.Setenv(c.Args().First())
+				commands.Init()
 				return nil
 			},
 		},
