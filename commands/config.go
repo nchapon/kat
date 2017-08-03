@@ -55,3 +55,22 @@ func (c Config) Save() error {
 
 	return ioutil.WriteFile(ConfigFile, json, os.ModePerm)
 }
+
+func Get() (Config, error) {
+
+	raw, err := ioutil.ReadFile(ConfigFile)
+	if err != nil {
+		panic(err)
+	}
+
+	c := &Config{}
+
+	err = json.Unmarshal(raw, &c)
+
+	if err != nil {
+		return *c, err
+	}
+
+	return *c, nil
+
+}
