@@ -1,9 +1,9 @@
 package commands
 
 import (
-	"bufio"
+	"encoding/json"
 	"fmt"
-	"os"
+	"io/ioutil"
 	"testing"
 )
 
@@ -13,18 +13,20 @@ func TestInit(t *testing.T) {
 	Init()
 
 	configFile := fmt.Sprintf("%s/kong.conf", katDir())
-
-	f, err := os.Open(configFile)
-
+	raw, err := ioutil.ReadFile(configFile)
 	if err != nil {
 		t.Errorf("Could not read file  %s", configFile)
+		t.FailNow()
 	}
 
-	// TODO : change tesy
-	s := bufio.NewScanner(f)
-	s.Scan()
-	if data := s.Text(); data != "test" {
-		t.Errorf("Expected content=test, but it was %s.", data)
+	actual := Config{KongUrl: "https://localhost:8443",
+		KongAdminUrl: "http://localhost:8001"}
+
+	var expected Config
+	json.Unmarshal(raw, &expected)
+
+	if actual != expected {
+		t.Errorf("Actual is not equal to expeted !!")
 	}
 
 }
