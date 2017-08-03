@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
-	"kat/commands"
 	"os"
 
+	"github.com/nchapon/kat/commands"
 	"github.com/urfave/cli"
 )
 
@@ -35,9 +35,9 @@ func main() {
 			},
 		},
 		{
-			Name:    "setenv",
+			Name:    "init",
 			Aliases: []string{"s"},
-			Usage:   "Set up kong env",
+			Usage:   "Init KAT project",
 			Action: func(c *cli.Context) error {
 				commands.Init()
 				return nil

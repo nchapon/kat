@@ -12,7 +12,7 @@ func TestInit(t *testing.T) {
 
 	Init()
 
-	configFile := fmt.Sprintf("%s/kong.conf", katDir())
+	configFile := fmt.Sprintf("%s/.kat", katDir())
 	raw, err := ioutil.ReadFile(configFile)
 	if err != nil {
 		t.Errorf("Could not read file  %s", configFile)

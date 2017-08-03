@@ -14,7 +14,7 @@ var ConfigFile string
 func init() {
 
 	katDir := katDir()
-	ConfigFile = filepath.Join(katDir, "kong.conf")
+	ConfigFile = filepath.Join(katDir, ".kat")
 
 	err := os.MkdirAll(katDir, os.ModePerm)
 
@@ -28,10 +28,11 @@ func init() {
 
 // katDir ...
 func katDir() string {
-	exPath, err := os.Executable()
+	katDir, err := os.Getwd()
+
 	check(err)
 
-	return filepath.Dir(exPath)
+	return katDir
 }
 
 func check(e error) {
@@ -56,5 +57,5 @@ func Init() {
 
 	ioutil.WriteFile(ConfigFile, json, os.ModePerm)
 
-	fmt.Printf("Your Kong is now %s \n", ConfigFile)
+	fmt.Printf("✔ Initialized empty Kat config in %s \n", ConfigFile)
 }
